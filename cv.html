@@ -11,7 +11,7 @@
 </head>
 <body class="cv-body">
 
-<!-- TOOLBAR — floats over the CV instead of taking its own header row -->
+<!-- TOOLBAR — floats over the CV, screen only (hidden on print/PDF) -->
 <div class="cv-toolbar no-print" role="group" aria-label="CV actions">
   <div class="lang-switch" role="group" aria-label="Language / Idioma">
     <button type="button" data-lang-option="pt" aria-pressed="false">PT</button>
@@ -32,178 +32,169 @@
 
 <div class="cv-page">
 
-  <!-- SIDEBAR -->
-  <aside class="cv-sidebar">
-    <img class="cv-avatar" src="assets/images/pfp.png" alt="Portrait of me">
-    <h1>João Coelho</h1>
-    <p class="cv-role" data-i18n="cv.role">Computer Science and Engineering Student</p>
-
-    <div class="cv-side-section">
-      <h2 data-i18n="cv.contact.title">Contact</h2>
-      <ul class="cv-contact-list">
-        <li>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2"/><path d="M3 6.5l9 6.5 9-6.5"/></svg>
-          <a href="mailto:joao.mbmc@gmail.com">joao.mbmc@gmail.com</a>
-        </li>
-        <li>
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56 0-.27-.01-1.17-.02-2.12-3.2.7-3.88-1.36-3.88-1.36-.52-1.34-1.28-1.69-1.28-1.69-1.04-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.23-1.28-5.23-5.69 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.47.11-3.06 0 0 .97-.31 3.18 1.18.92-.26 1.91-.39 2.89-.39.98 0 1.97.13 2.89.39 2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.77.12 3.06.74.8 1.18 1.83 1.18 3.09 0 4.42-2.69 5.4-5.25 5.68.41.36.78 1.06.78 2.15 0 1.55-.01 2.8-.01 3.18 0 .31.21.67.8.56C20.71 21.38 24 17.08 24 12 24 5.65 18.85.5 12 .5z"/></svg>
-          <a href="https://github.com/joaombmcoelho" target="_blank" rel="noopener">@joaombmcoelho</a>
-        </li>
-        <li>
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.03-1.85-3.03-1.85 0-2.14 1.45-2.14 2.94v5.66H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.28 2.38 4.28 5.47v6.27zM5.34 7.43a2.07 2.07 0 1 1 0-4.13 2.07 2.07 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>
-          <a href="https://www.linkedin.com/in/joaombmcoelho" target="_blank" rel="noopener">@joaombmcoelho</a>
-        </li>
-        <li>
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"></circle>
-            <line x1="2" y1="12" x2="22" y2="12"></line>
-            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-          </svg>
-          <a href="https://joaombmcoelho.github.io" target="_blank" rel="noopener">joaombmcoelho.github.io</a>
-        </li>
-        <li>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.33-7-11a7 7 0 0 1 14 0c0 5.67-7 11-7 11z"/><circle cx="12" cy="10" r="2.3"/></svg>
-          <span data-i18n="cv.location">Lisbon, Portugal</span>
-        </li>
-      </ul>
+  <!-- HEADER — screen shows photo + name; print/PDF drops the photo
+       (see @media print in cv.css) and keeps just the name/role, so
+       both versions carry identical text, just less chrome on paper. -->
+  <header class="cv-header">
+    <img class="cv-avatar no-print" src="assets/images/pfp.png" alt="Portrait of me">
+    <div class="cv-header-text">
+      <h1>João Coelho</h1>
+      <p class="cv-role" data-i18n="cv.role">Computer Science and Engineering Student</p>
     </div>
+  </header>
 
-    <div class="cv-side-section">
-      <h2 data-i18n="cv.skills.title">Skills</h2>
-      <div class="skill-group">
-        <p class="skill-group-label" data-i18n="cv.skills.programming">Programming</p>
-        <ul class="skill-rating-list">
-          <li><span class="skill-name">Python</span><span class="skill-dots"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span></span></li>
-          <li><span class="skill-name">C</span><span class="skill-dots"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="off"></span></span></li>
-          <li><span class="skill-name">Assembly</span><span class="skill-dots"><span class="on"></span><span class="off"></span><span class="off"></span><span class="off"></span><span class="off"></span></span></li>
-          <li><span class="skill-name">Prolog</span><span class="skill-dots"><span class="on"></span><span class="off"></span><span class="off"></span><span class="off"></span><span class="off"></span></span></li>
-        </ul>
-      </div>
-      <div class="skill-group">
-        <p class="skill-group-label" data-i18n="cv.skills.tools">Tools</p>
-        <ul class="skill-rating-list">
-          <li><span class="skill-name">Git</span><span class="skill-dots"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="off"></span></span></li>
-          <li><span class="skill-name">Linux</span><span class="skill-dots"><span class="on"></span><span class="on"></span><span class="on"></span><span class="off"></span><span class="off"></span></span></li>
-          <li><span class="skill-name">Docker</span><span class="skill-dots"><span class="on"></span><span class="on"></span><span class="off"></span><span class="off"></span><span class="off"></span></span></li>
-        </ul>
-      </div>
-    </div>
+  <!-- CONTACT LINE — icon before every value, one single row in both
+       screen and print (see cv.css: nowrap + compact sizing). -->
+  <ul class="cv-contact-line">
+    <li>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2"/><path d="M3 6.5l9 6.5 9-6.5"/></svg>
+      <a href="mailto:joao.mbmc@gmail.com">joao.mbmc@gmail.com</a>
+    </li>
+    <li>
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56 0-.27-.01-1.17-.02-2.12-3.2.7-3.88-1.36-3.88-1.36-.52-1.34-1.28-1.69-1.28-1.69-1.04-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.23-1.28-5.23-5.69 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.47.11-3.06 0 0 .97-.31 3.18 1.18.92-.26 1.91-.39 2.89-.39.98 0 1.97.13 2.89.39 2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.77.12 3.06.74.8 1.18 1.83 1.18 3.09 0 4.42-2.69 5.4-5.25 5.68.41.36.78 1.06.78 2.15 0 1.55-.01 2.8-.01 3.18 0 .31.21.67.8.56C20.71 21.38 24 17.08 24 12 24 5.65 18.85.5 12 .5z"/></svg>
+      <a href="https://github.com/joaombmcoelho" target="_blank" rel="noopener">joaombmcoelho</a>
+    </li>
+    <li>
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.03-1.85-3.03-1.85 0-2.14 1.45-2.14 2.94v5.66H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.28 2.38 4.28 5.47v6.27zM5.34 7.43a2.07 2.07 0 1 1 0-4.13 2.07 2.07 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>
+      <a href="https://www.linkedin.com/in/joaombmcoelho" target="_blank" rel="noopener">joaombmcoelho</a>
+    </li>
+    <li>
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="2" y1="12" x2="22" y2="12"></line>
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+      </svg>
+      <a href="https://joaombmcoelho.github.io" target="_blank" rel="noopener">joaombmcoelho.github.io</a>
+    </li>
+    <li>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.33-7-11a7 7 0 0 1 14 0c0 5.67-7 11-7 11z"/><circle cx="12" cy="10" r="2.3"/></svg>
+      <span data-i18n="cv.location">Lisbon, Portugal</span>
+    </li>
+  </ul>
 
-    <div class="cv-side-section">
-      <h2 data-i18n="cv.languages.title">Languages</h2>
-      <ul class="cv-lang-list">
-        <li><span data-i18n="cv.languages.pt">Portuguese</span><span class="level" data-i18n="cv.languages.ptLevel">Native</span></li>
-        <li><span data-i18n="cv.languages.en">English</span><span class="level" data-i18n="cv.languages.enLevel">Fluent C1 (EF SET)</span></li>
-        <li><span data-i18n="cv.languages.fr">French</span><span class="level" data-i18n="cv.languages.frLevel">Elementary A2 (DELF)</span></li>
-      </ul>
-    </div>
-
-    <div class="cv-side-section">
-      <h2 data-i18n="cv.education.title">Education</h2>
-      <p style="font-size:0.85rem; margin:0; line-height:1.5;">
-        LEIC-A<br>
-        Instituto Superior Técnico<br>
-        <span style="color:var(--text-soft); font-family:var(--font-mono); font-size:0.76rem;" data-i18n="cv.education.grad">Expected Graduation: 2028</span>
-      </p>
-    </div>
-  </aside>
-
-  <!-- MAIN -->
+  <!-- MAIN — one linear column: Profile, Education, Experience,
+       Projects, Skills, Languages. Every entry follows the same
+       two-row header (name/date, then sub-detail/extra-detail) plus
+       a short bullet list — no free-floating tag rows. -->
   <main class="cv-main">
 
     <div class="cv-block">
-      <h2 class="cv-section-title" data-i18n="cv.section.profile">profile</h2>
-      <p class="cv-summary" data-i18n="cv.summary">2nd-year Computer Science student (LEIC-A) at Instituto Superior Técnico. Comfortable across the stack, from C and Python systems work to RISC-V assembly and digital logic. Looking for an internship or junior role where I can contribute from day one.</p>
+      <p class="cv-summary" data-i18n="cv.summary">2nd-year Computer Science student (LEIC-A) at Instituto Superior Técnico, comfortable across C, Python and RISC-V. Looking for an internship where I can contribute from day one.</p>
     </div>
 
-    <!-- PROJECTS BLOCK — the 3 most representative entries; the 4th
-         project (Mini-Transformer) stays homepage-only so this single
-         CV page doesn't get overloaded -->
+    <!-- EDUCATION -->
+    <div class="cv-block">
+      <h2 class="cv-section-title" data-i18n="cv.section.education">education</h2>
+      <div class="cv-entry">
+        <div class="cv-entry-row">
+          <h3 data-i18n="cv.edu.name">LEIC-A — Computer Science and Engineering</h3>
+          <span class="cv-entry-meta" data-i18n="cv.edu.date">2024 — 2028 (expected)</span>
+        </div>
+        <div class="cv-entry-row cv-entry-sub">
+          <span data-i18n="cv.edu.institution">Instituto Superior Técnico</span>
+          <span data-i18n="cv.edu.city">Lisbon, Portugal</span>
+        </div>
+        <ul class="cv-bullets">
+          <li data-i18n="cv.edu.b1">Coursework: systems programming, computer architecture, algorithms and mathematics.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- EXPERIENCE — example entry so the layout is visible; swap the
+         text for your own experience once you have it, and delete
+         the "exampleNote" line above it. -->
+    <div class="cv-block">
+      <h2 class="cv-section-title" data-i18n="cv.section.experience">experience</h2>
+      <p class="cv-example-note no-print" data-i18n="cv.experience.exampleNote">Example entry below — replace with your own experience.</p>
+
+      <div class="cv-entry">
+        <div class="cv-entry-row">
+          <h3 data-i18n="cv.exp1.title">Software Engineering Intern (example)</h3>
+          <span class="cv-entry-meta" data-i18n="cv.exp1.date">Jun 2026 — Aug 2026</span>
+        </div>
+        <div class="cv-entry-row cv-entry-sub">
+          <span data-i18n="cv.exp1.company">Company Name</span>
+          <span data-i18n="cv.exp1.city">Lisbon, Portugal</span>
+        </div>
+        <ul class="cv-bullets">
+          <li data-i18n="cv.exp1.b1">Shipped a feature end-to-end that was adopted by the core product team.</li>
+          <li data-i18n="cv.exp1.b2">Cut a key process's runtime by 40% by profiling and rewriting the hot path.</li>
+          <li data-i18n="cv.exp1.b3">Worked with senior engineers on code review and test coverage.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- PROJECTS — right-hand slot holds the course, not a date; the
+         old tech-stack "pill row" is now a plain right-aligned line
+         next to the institution, so it doesn't cost its own row. -->
     <div class="cv-block">
       <h2 class="cv-section-title" data-i18n="cv.section.projects">projects</h2>
 
       <div class="cv-entry">
-        <div class="cv-entry-head">
-          <h3 data-i18n="cv.p1.title">Faturação — Invoicing &amp; Inventory CLI</h3>
-          <span class="cv-entry-date" data-i18n="cv.tag.academic">Academic</span>
+        <div class="cv-entry-row">
+          <h3 data-i18n="cv.p1.title">Invoicing &amp; Inventory CLI</h3>
+          <span class="cv-entry-meta" data-i18n="cv.p1.course">Systems Programming</span>
         </div>
-        <p class="cv-entry-sub" data-i18n="cv.p1.sub">Systems Programming coursework — Instituto Superior Técnico</p>
-        <p class="desc" data-i18n="cv.p1.desc">Invoicing and stock-management system in C: catalogue, cart, invoice history sorted with a hand-written merge sort, EAN checksum validation, and wildcard product search.</p>
-        <div class="stack"><span>C</span><span>Merge Sort</span><span>CLI</span></div>
+        <div class="cv-entry-row cv-entry-sub">
+          <span data-i18n="cv.p1.institution">Instituto Superior Técnico</span>
+          <span class="cv-entry-stack" data-i18n="cv.p1.stack">C · Merge Sort · CLI</span>
+        </div>
+        <ul class="cv-bullets">
+          <li data-i18n="cv.p1.b1">Built an invoicing and stock-management system in C: catalogue, cart and invoice history.</li>
+          <li data-i18n="cv.p1.b2">Implemented a hand-written merge sort, EAN checksum validation and wildcard product search.</li>
+        </ul>
       </div>
 
       <div class="cv-entry">
-        <div class="cv-entry-head">
-          <h3 data-i18n="cv.p2.title">Scrabble2 — AI Game Agent</h3>
-          <span class="cv-entry-date" data-i18n="cv.tag.academic">Academic</span>
+        <div class="cv-entry-row">
+          <h3 data-i18n="cv.p2.title">Scrabble Game &amp; Agent</h3>
+          <span class="cv-entry-meta" data-i18n="cv.p2.course">Functional Programming</span>
         </div>
-        <p class="cv-entry-sub" data-i18n="cv.p2.sub">AI / Functional Programming coursework — Instituto Superior Técnico</p>
-        <p class="desc" data-i18n="cv.p2.desc">Full Scrabble engine in Python for human and AI players across three difficulty levels — board/move validation, letter-bag shuffling, and a move-search agent.</p>
-        <div class="stack"><span>Python</span><span>AI Agent</span></div>
+        <div class="cv-entry-row cv-entry-sub">
+          <span data-i18n="cv.p2.institution">Instituto Superior Técnico</span>
+          <span class="cv-entry-stack" data-i18n="cv.p2.stack">Python · AI Agent</span>
+        </div>
+        <ul class="cv-bullets">
+          <li data-i18n="cv.p2.b1">Built a full Scrabble engine in Python for human and bot players across three difficulty levels.</li>
+          <li data-i18n="cv.p2.b2">Implemented board/move validation, letter-bag shuffling and a move-search agent.</li>
+        </ul>
       </div>
 
       <div class="cv-entry">
-        <div class="cv-entry-head">
+        <div class="cv-entry-row">
           <h3 data-i18n="cv.p3.title">16-bit Single-Cycle Processor</h3>
-          <span class="cv-entry-date" data-i18n="cv.tag.academic">Academic</span>
+          <span class="cv-entry-meta" data-i18n="cv.p3.course">Computer Architecture</span>
         </div>
-        <p class="cv-entry-sub" data-i18n="cv.p3.sub">Computer Architecture coursework — Instituto Superior Técnico</p>
-        <p class="desc" data-i18n="cv.p3.desc">Designed a 16-bit single-cycle processor in Logisim, supporting a small custom instruction set (li, add, dot, dota) built on a 3-bit opcode scheme.</p>
-        <div class="stack"><span>Logisim</span><span>ISA Design</span></div>
+        <div class="cv-entry-row cv-entry-sub">
+          <span data-i18n="cv.p3.institution">Instituto Superior Técnico</span>
+          <span class="cv-entry-stack" data-i18n="cv.p3.stack">Logisim · ISA Design</span>
+        </div>
+        <ul class="cv-bullets">
+          <li data-i18n="cv.p3.b1">Designed a 16-bit single-cycle processor in Logisim on a 3-bit opcode scheme.</li>
+          <li data-i18n="cv.p3.b2">Built a small custom instruction set (li, add, dot, dota).</li>
+        </ul>
       </div>
     </div>
 
-    <!-- EDUCATION BLOCK -->
+    <!-- SKILLS — plain text, one line per category (no boxes: faster
+         to scan and one less thing that can push the page to two). -->
     <div class="cv-block">
-      <h2 class="cv-section-title" data-i18n="cv.section.education">education</h2>
-      <div class="cv-entry">
-        <div class="cv-entry-head">
-          <h3 data-i18n="cv.edu.name">LEIC-A — Computer Science and Engineering</h3>
-          <span class="cv-entry-date" data-i18n="cv.edu.date">2024 — 2028 (expected)</span>
-        </div>
-        <p class="cv-entry-sub" data-i18n="cv.edu.location">Instituto Superior Técnico, Lisbon</p>
-        <p class="desc" data-i18n="cv.edu.desc">Coursework spans computer architecture, algorithms, systems programming, and mathematics.</p>
-      </div>
+      <h2 class="cv-section-title" data-i18n="cv.section.skills">skills</h2>
+      <p class="cv-skill-line"><span class="cv-skill-label" data-i18n="cv.skills.programming">Programming</span><span data-i18n="cv.skills.programmingList">Python, C, Assembly (RISC-V), Prolog</span></p>
+      <p class="cv-skill-line"><span class="cv-skill-label" data-i18n="cv.skills.tools">Tools</span><span data-i18n="cv.skills.toolsList">Git, Linux, Docker</span></p>
     </div>
 
-    <!-- EXPERIENCE BLOCK -->
+    <!-- LANGUAGES -->
     <div class="cv-block">
-      <h2 class="cv-section-title" data-i18n="cv.section.experience">experience</h2>
-      <p class="cv-placeholder" data-i18n="cv.experience.placeholder">No professional experience listed yet — add internships, part-time work, or volunteering here as you gain them.</p>
-
-      <!-- ============================================================
-           TEMPLATE — quando tiveres a primeira experiência, apaga o
-           <p class="cv-placeholder"> acima e cola isto no lugar (o mesmo
-           bloco .cv-entry que já é usado em "projects" e "education").
-
-           Passos:
-           1. Título / data / local: preenche diretamente ou usa
-              data-i18n com uma chave nova (ex.: "cv.exp1.title") e
-              acrescenta essa chave nos dois dicionários (en/pt) em
-              data/i18n.json.
-           2. Descrição: 1-2 frases, o que fizeste e o impacto.
-           3. Stack: opcional — tecnologias/ferramentas usadas, mesmo
-              padrão dos projetos.
-           4. Repete o bloco inteiro para cada experiência nova; a
-              borda entre entradas aparece automaticamente.
-           ============================================================
-
-      <div class="cv-entry">
-        <div class="cv-entry-head">
-          <h3 data-i18n="cv.exp1.title">Job Title</h3>
-          <span class="cv-entry-date" data-i18n="cv.exp1.date">Mon YYYY — Mon YYYY</span>
-        </div>
-        <p class="cv-entry-sub" data-i18n="cv.exp1.sub">Company Name, City</p>
-        <p class="desc" data-i18n="cv.exp1.desc">What you did and the impact it had, in one or two sentences.</p>
-        <div class="stack">
-          <span>Tool 1</span>
-          <span>Tool 2</span>
-        </div>
-      </div>
-      -->
+      <h2 class="cv-section-title" data-i18n="cv.section.languages">languages</h2>
+      <p class="cv-lang-line" data-i18n="cv.languages.line">Portuguese — Native  ·  English — Fluent (C1)  ·  French — Elementary (A2)</p>
     </div>
 
   </main>
+
+  <footer class="cv-footer no-print">
+    <a href="cv-legacy.html" data-i18n="cv.legacyLink">old sidebar design →</a>
+  </footer>
 
 </div>
 

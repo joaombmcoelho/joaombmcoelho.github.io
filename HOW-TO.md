@@ -7,18 +7,32 @@ reaprender a estrutura toda de cada vez.
 
 ```
 index.html         homepage: hero + about + skills + projects (tudo numa página, só em inglês)
-cv.html             página do CV (layout sidebar, toolbar flutuante, EN/PT)
+cv.html             página do CV (layout single-column ATS-friendly, toolbar flutuante, EN/PT)
 projects.html        redirect para index.html#projects (só para não partir links antigos)
 css/style.css        tokens de design + estilos partilhados (header, cards, hero, etc.)
-css/cv.css           estilos específicos do CV (incluindo o seletor de idioma)
+css/cv.css           estilos específicos do CV atual (incluindo o seletor de idioma)
 js/main.js            dark mode, menu mobile, imprimir o CV, e a troca de idioma do CV
 data/i18n.json        texto do CV em EN + PT — a única coisa que precisa de
                        duas versões; usado pelo cv.html E pelo gen_cv_pdf.py
 assets/images/pfp.png            a tua foto (placeholder por agora)
 assets/images/projects/*.png      uma imagem por projeto (placeholders por agora)
 assets/cv/*.pdf        PDFs do CV (gerados por gen_cv_pdf.py)
-gen_cv_pdf.py          gera os PDFs a partir de data/i18n.json
+gen_cv_pdf.py          gera os PDFs ATS-friendly a partir de data/i18n.json
+
+-- arquivo, não editar a não ser que queiras mesmo mexer no design antigo --
+cv-legacy.html         design antigo do CV (sidebar + skill dots) — só um
+                        link discreto no rodapé de cv.html aponta para aqui
+css/cv-legacy.css      estilos do design antigo
+gen_cv_pdf_legacy.py   gera os PDFs do design antigo (*-legacy-en/pt.pdf)
 ```
+
+**Porque o CV mudou de layout:** o design antigo usava uma sidebar de
+2 colunas e "skill dots" (bolinhas sem texto por trás) para mostrar
+nível de cada tecnologia. Isso lê mal em leitores de CV automáticos
+(ATS): o texto sai fora de ordem e as bolinhas não têm conteúdo
+nenhum para extrair. O `cv.html` atual é uma coluna só, texto simples
+do início ao fim — mais chato de olhar, mas o que passa num ATS de
+verdade. Ambas as versões continuam a usar o mesmo `data/i18n.json`.
 
 **Só o CV é bilingue.** O resto do site (`index.html`, `projects.html`)
 é escrito diretamente em inglês no HTML, sem `data-i18n` e sem seletor
@@ -53,12 +67,13 @@ bloco `<article>...</article>` para fora do comentário (antes dele) e:
 
 ## Adicionar experiência profissional ao CV
 
-Em `cv.html`, dentro do bloco "experience", há o mesmo tipo de
-comentário `TEMPLATE`. Quando tiveres a primeira experiência: apaga o
-parágrafo placeholder, cola o bloco `.cv-entry` do template, preenche
-e repete para cada nova entrada. Como o CV é bilingue, usa
-`data-i18n="cv.expN.xxx"` e acrescenta essas chaves nos dois
-dicionários (`en` e `pt`) em `data/i18n.json`.
+Em `cv.html`, dentro do bloco "experience", há uma entrada de
+**exemplo** (`Software Engineering Intern (example)`, dados
+inventados) só para mostrares o layout. Quando tiveres a tua própria
+experiência: apaga o parágrafo `cv-example-note` e substitui o texto
+do `.cv-entry` pelos teus dados reais (mesmas chaves `cv.exp1.*` em
+`data/i18n.json`, nos dois idiomas). Para mais do que uma experiência,
+duplica o bloco `.cv-entry` inteiro e usa `cv.exp2.*`, `cv.exp3.*`, etc.
 
 ## Traduções do CV (PT/EN)
 
@@ -75,18 +90,30 @@ bem em ecrãs de alta resolução), mantendo o mesmo nome de ficheiro.
 
 ## Atualizar o PDF do CV
 
-Como o `gen_cv_pdf.py` lê diretamente de `data/i18n.json`, só precisas
-de mudar o JSON (para texto) — o script não tem mais nada para
-atualizar à parte, exceto se adicionares/tirares um projeto (nesse
-caso ajusta `PROJECT_KEYS` e `PROJECT_STACKS` no topo do ficheiro) ou
-mudares as competências/idiomas (`PROGRAMMING_SKILLS`, `TOOL_SKILLS`).
+O `gen_cv_pdf.py` **não tem um layout próprio** — ele lê o teu
+`cv.html`/`cv.css` normal, substitui cada `[data-i18n]` pelo texto do
+idioma pedido (a partir de `data/i18n.json`) e imprime o resultado
+para PDF com `wkhtmltopdf`. Ou seja: muda o `cv.html` normalmente (ou
+só o JSON, para texto) e o PDF segue automaticamente — não há um
+segundo layout para manter sincronizado à mão.
 
 ```
-pip install reportlab --break-system-packages
+pip install beautifulsoup4 --break-system-packages
+sudo apt install wkhtmltopdf fonts-ibm-plex   # fonts-ibm-plex evita
+                                                # depender da Google
+                                                # Fonts a gerar o PDF
 python3 gen_cv_pdf.py
 ```
 
 Isto substitui os dois ficheiros em `assets/cv/`.
+
+Se mexeres no CSS do CV: as regras específicas do PDF vivem em dois
+sítios em `cv.css` — `@media print` (para quando alguém faz Cmd/Ctrl+P
+no browser) e `body.pdf-mode` (usado só pelo `gen_cv_pdf.py`, porque a
+versão do `wkhtmltopdf` instalada ignora `--print-media-type`). As
+duas têm de dizer sempre a mesma coisa. Evita também a propriedade
+`gap` em flexbox no CSS do CV — o motor do `wkhtmltopdf` não a
+suporta; usa `margin` no elemento a seguir, como o resto do ficheiro já faz.
 
 ## Impressão do CV no Safari
 

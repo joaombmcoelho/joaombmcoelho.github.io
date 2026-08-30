@@ -1,258 +1,118 @@
 #!/usr/bin/env python3
 """
-Gera os PDFs do CV (en/pt) a partir de data/i18n.json — o mesmo
-ficheiro que o site usa para as traduções. Não há texto duplicado
-aqui: só o layout do PDF (que tem de ficar bem paginado, diferente
-do HTML) e uma pequena tabela de competências/idiomas que não faz
-sentido guardar num dicionário de traduções.
+Gera os PDFs do CV (en/pt) a partir do PRÓPRIO cv.html — não de um
+layout paralelo. Isto substitui a abordagem anterior (reportlab a
+redesenhar tudo à mão num ficheiro à parte), que obrigava a manter
+dois layouts sincronizados manualmente e facilmente desalinhava.
+
+Como funciona:
+  1. Lê cv.html e resolve cada elemento [data-i18n] com o texto do
+     idioma pedido (o mesmo data/i18n.json que o site usa) — o mesmo
+     que o main.js faz no browser, só que aqui de antemão.
+  2. Remove <script> (não precisamos de JS: o texto já está resolvido)
+     para não confundir o PDF gerado.
+  3. Escreve um HTML temporário na raiz do site (para os caminhos
+     relativos a css/ e assets/ continuarem a funcionar) e imprime-o
+     com wkhtmltopdf --print-media-type, que aplica exatamente o
+     @media print do cv.css — o mesmo bloco que rege a versão
+     "imprimir" no browser.
+
+Resultado: HTML e PDF partilham 100% do layout/CSS; a única
+diferença é a que o próprio @media print define (sem foto, sem
+toolbar, sem a nota "example entry").
 
 Correr com:
-    pip install reportlab --break-system-packages
+    pip install beautifulsoup4 --break-system-packages
+    sudo apt install wkhtmltopdf fonts-ibm-plex
     python3 gen_cv_pdf.py
 """
 
 import json
+import subprocess
 from pathlib import Path
 
-from reportlab.lib.pagesizes import A4
-from reportlab.lib.units import mm
-from reportlab.lib.colors import HexColor
-from reportlab.platypus import (
-    SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, HRFlowable
-)
-from reportlab.lib.styles import ParagraphStyle
-from reportlab.lib.enums import TA_LEFT
-from reportlab.graphics.shapes import Drawing, Rect
+from bs4 import BeautifulSoup
 
 BASE_DIR = Path(__file__).parent
 I18N_PATH = BASE_DIR / "data" / "i18n.json"
-
-BLACK = HexColor("#0a0a0a")
-SOFT = HexColor("#5c5c5c")
-BORDER = HexColor("#cccccc")
-SIDEBAR_BG = HexColor("#f4f4f4")
-
-NAME = "João Coelho"
-EMAIL = "joao.mbmc@gmail.com"
-FENIX = "fenix.tecnico.ulisboa.pt/homepage/ist1117964"
-GITHUB = "github.com/joaombmcoelho"
-LINKEDIN = "linkedin.com/in/joaombmcoelho"
-
-# skill dot ratings — not translatable, so they live here rather than in i18n.json
-PROGRAMMING_SKILLS = [("Python", 5), ("C", 4)]
-TOOL_SKILLS = [("Git", 4), ("Linux", 3), ("Docker", 2)]
-
-# which cv.pN.* keys go on the PDF, in order — keep in sync with cv.html
-PROJECT_KEYS = ["p1", "p2", "p3"]
+CV_HTML_PATH = BASE_DIR / "cv.html"
+OUT_DIR = BASE_DIR / "assets" / "cv"
 
 
-def load_content(lang):
-    """Pull every string this PDF needs out of the shared i18n dict,
-    under its cv.* namespace — same keys the site's CV page uses."""
-    data = json.loads(I18N_PATH.read_text(encoding="utf-8"))
-    t = data[lang]
+def render_static_html(lang: str) -> str:
+    """Return cv.html with every data-i18n element resolved to plain
+    text for `lang`, JS stripped, and PDF-irrelevant bits removed."""
+    dict_ = json.loads(I18N_PATH.read_text(encoding="utf-8"))[lang]
+    soup = BeautifulSoup(CV_HTML_PATH.read_text(encoding="utf-8"), "html.parser")
 
-    c = {
-        "role": t["cv.role"],
-        "contact_heading": t["cv.contact.title"],
-        "skills_heading": t["cv.skills.title"],
-        "programming": t["cv.skills.programming"],
-        "tools": t["cv.skills.tools"],
-        "languages_heading": t["cv.languages.title"],
-        "lang_pt": f"{t['cv.languages.pt']} \u2014 {t['cv.languages.ptLevel']}",
-        "lang_en": f"{t['cv.languages.en']} \u2014 {t['cv.languages.enLevel']}",
-        "education_heading": t["cv.education.title"],
-        "education_side": f"LEIC-A<br/>Instituto Superior T\u00e9cnico<br/>"
-                           f"<font color='#5c5c5c'>{t['cv.education.grad']}</font>",
-        "location": t["cv.location"],
-        "sec_profile": t["cv.section.profile"],
-        "summary": t["cv.summary"],
-        "sec_projects": t["cv.section.projects"],
-        "sec_education": t["cv.section.education"],
-        "edu_title": t["cv.edu.name"],
-        "edu_date": t["cv.edu.date"],
-        "edu_sub": t["cv.edu.location"],
-        "edu_desc": t["cv.edu.desc"],
-        "sec_experience": t["cv.section.experience"],
-        "experience_placeholder": t["cv.experience.placeholder"],
-        "tag_academic": t["cv.tag.academic"],
-    }
+    soup.html["lang"] = lang
+    # wkhtmltopdf here ignores --print-media-type (unpatched Qt build),
+    # so force the print rules on via a class instead of @media print.
+    soup.body["class"] = soup.body.get("class", []) + ["pdf-mode"]
+    # Point at a local-fonts-only copy of style.css (see build_pdf) so
+    # wkhtmltopdf never needs the network for the Google Fonts @import —
+    # IBM Plex is installed as a system font, so it resolves locally.
+    style_link = soup.select_one('link[href="css/style.css"]')
+    if style_link:
+        style_link["href"] = "css/_pdf_style.tmp.css"
 
-    c["projects"] = [
-        {"title": t[f"cv.{key}.title"], "sub": t[f"cv.{key}.sub"], "desc": t[f"cv.{key}.desc"]}
-        for key in PROJECT_KEYS
-    ]
-    return c
+    for el in soup.select("[data-i18n]"):
+        key = el.get("data-i18n")
+        if key not in dict_:
+            continue
+        if el.has_attr("data-i18n-attr"):
+            el[el["data-i18n-attr"]] = dict_[key]
+        else:
+            el.string = dict_[key]
 
+    for el in soup.select("[data-i18n-aria]"):
+        key = el.get("data-i18n-aria")
+        if key in dict_:
+            el["aria-label"] = dict_[key]
 
-def skill_dots(level, max_level=5, size=6.5, gap=3):
-    width = max_level * size + (max_level - 1) * gap
-    d = Drawing(width, size)
-    for i in range(max_level):
-        x = i * (size + gap)
-        filled = i < level
-        d.add(Rect(
-            x, 0, size, size,
-            fillColor=BLACK if filled else None,
-            strokeColor=BLACK if filled else BORDER,
-            strokeWidth=0.7,
-        ))
-    return d, width
+    # No JS needed — the text above is already resolved, and running
+    # main.js would just try to re-fetch i18n.json and re-toggle langs.
+    for script in soup.find_all("script"):
+        script.decompose()
 
-PAGE_W, PAGE_H = A4
-SIDEBAR_W = 55 * mm
-MAIN_W = PAGE_W - SIDEBAR_W - 28 * mm
-
-styles = {
-    "name": ParagraphStyle("name", fontName="Helvetica-Bold", fontSize=16, leading=19, textColor=BLACK),
-    "role": ParagraphStyle("role", fontName="Helvetica", fontSize=8.3, leading=12, textColor=SOFT, spaceAfter=14),
-    "side_h2": ParagraphStyle("side_h2", fontName="Helvetica-Bold", fontSize=7.6, leading=10, textColor=SOFT, spaceBefore=14, spaceAfter=6),
-    "side_body": ParagraphStyle("side_body", fontName="Helvetica", fontSize=8.3, leading=12.5, textColor=BLACK),
-    "side_link": ParagraphStyle("side_link", fontName="Helvetica", fontSize=8.3, leading=12.5, textColor=BLACK),
-    "skill_group": ParagraphStyle("skill_group", fontName="Helvetica-Bold", fontSize=6.9, leading=10, textColor=SOFT, spaceBefore=6, spaceAfter=4),
-    "skill_name": ParagraphStyle("skill_name", fontName="Helvetica", fontSize=8.3, leading=11, textColor=BLACK),
-    "sec_title": ParagraphStyle("sec_title", fontName="Helvetica-Bold", fontSize=10.5, leading=14, textColor=BLACK, spaceBefore=2, spaceAfter=8),
-    "summary": ParagraphStyle("summary", fontName="Helvetica", fontSize=9, leading=13.3, textColor=BLACK, spaceAfter=14),
-    "entry_title": ParagraphStyle("entry_title", fontName="Helvetica-Bold", fontSize=9.6, leading=12.5, textColor=BLACK),
-    "entry_date": ParagraphStyle("entry_date", fontName="Helvetica", fontSize=7.8, leading=11, textColor=SOFT, alignment=TA_LEFT),
-    "entry_sub": ParagraphStyle("entry_sub", fontName="Helvetica-Oblique", fontSize=8.2, leading=11.5, textColor=SOFT, spaceAfter=4),
-    "entry_desc": ParagraphStyle("entry_desc", fontName="Helvetica", fontSize=8.5, leading=12.3, textColor=BLACK, spaceAfter=4),
-    "entry_stack": ParagraphStyle("entry_stack", fontName="Helvetica", fontSize=7.6, leading=10.5, textColor=SOFT),
-    "placeholder": ParagraphStyle("placeholder", fontName="Helvetica-Oblique", fontSize=8.6, leading=13, textColor=SOFT),
-}
+    return str(soup)
 
 
-def build_sidebar(c):
-    flow = [Paragraph(NAME, styles["name"]), Paragraph(c["role"], styles["role"])]
-
-    flow.append(Paragraph(c["contact_heading"], styles["side_h2"]))
-    flow.append(HRFlowable(width="100%", thickness=0.5, color=BORDER, spaceAfter=6))
-    for line in [EMAIL, FENIX, GITHUB, LINKEDIN, c["location"]]:
-        flow.append(Paragraph(line, styles["side_link"]))
-        flow.append(Spacer(1, 3))
-
-    flow.append(Paragraph(c["skills_heading"], styles["side_h2"]))
-    flow.append(HRFlowable(width="100%", thickness=0.5, color=BORDER, spaceAfter=6))
-    flow.extend(skill_group_table(c["programming"], PROGRAMMING_SKILLS))
-    flow.extend(skill_group_table(c["tools"], TOOL_SKILLS))
-
-    flow.append(Paragraph(c["languages_heading"], styles["side_h2"]))
-    flow.append(HRFlowable(width="100%", thickness=0.5, color=BORDER, spaceAfter=6))
-    flow.append(Paragraph(c["lang_pt"], styles["side_body"]))
-    flow.append(Spacer(1, 3))
-    flow.append(Paragraph(c["lang_en"], styles["side_body"]))
-
-    flow.append(Paragraph(c["education_heading"], styles["side_h2"]))
-    flow.append(HRFlowable(width="100%", thickness=0.5, color=BORDER, spaceAfter=6))
-    flow.append(Paragraph(c["education_side"], styles["side_body"]))
-
-    return flow
-
-
-def skill_group_table(title, skills):
-    flow = [Paragraph(title.upper(), styles["skill_group"])]
-    rows = []
-    dots_w = 0
-    for name, level in skills:
-        dots, dots_w = skill_dots(level)
-        rows.append([Paragraph(name, styles["skill_name"]), dots])
-    name_w = (SIDEBAR_W - 18 * mm) - dots_w
-    t = Table(rows, colWidths=[name_w, dots_w])
-    t.setStyle(TableStyle([
-        ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
-        ("ALIGN", (1, 0), (1, -1), "RIGHT"),
-        ("LEFTPADDING", (0, 0), (-1, -1), 0),
-        ("RIGHTPADDING", (0, 0), (-1, -1), 0),
-        ("TOPPADDING", (0, 0), (-1, -1), 2.5),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 2.5),
-    ]))
-    flow.append(t)
-    return flow
-
-
-def entry(title, date, sub, desc, stack):
-    head = Table(
-        [[Paragraph(title, styles["entry_title"]), Paragraph(date, styles["entry_date"])]],
-        colWidths=[MAIN_W * 0.7, MAIN_W * 0.3],
+def build_pdf(path: Path, lang: str) -> None:
+    html = render_static_html(lang)
+    tmp_path = BASE_DIR / f"_cv_print_{lang}.tmp.html"
+    style_src = BASE_DIR / "css" / "style.css"
+    style_tmp = BASE_DIR / "css" / "_pdf_style.tmp.css"
+    # Strip the Google Fonts @import (must be the file's first rule, so
+    # it can't be overridden from outside) — IBM Plex is installed
+    # locally, so plain font-family matching still finds it, no network.
+    style_css = style_src.read_text(encoding="utf-8")
+    style_css = "\n".join(
+        line for line in style_css.splitlines() if "@import" not in line
     )
-    head.setStyle(TableStyle([
-        ("VALIGN", (0, 0), (-1, -1), "BOTTOM"),
-        ("ALIGN", (1, 0), (1, 0), "RIGHT"),
-        ("LEFTPADDING", (0, 0), (-1, -1), 0),
-        ("RIGHTPADDING", (0, 0), (-1, -1), 0),
-        ("TOPPADDING", (0, 0), (-1, -1), 0),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
-    ]))
-    flow = [head, Paragraph(sub, styles["entry_sub"]), Paragraph(desc, styles["entry_desc"])]
-    if stack:
-        flow.append(Paragraph(" &nbsp;\u00b7&nbsp; ".join(stack), styles["entry_stack"]))
-    flow.append(Spacer(1, 3))
-    flow.append(HRFlowable(width="100%", thickness=0.5, color=BORDER, spaceAfter=9))
-    return flow
-
-
-PROJECT_STACKS = {
-    "p1": ["C", "Merge Sort", "CLI"],
-    "p2": ["Python", "AI Agent"],
-    "p3": ["Logisim", "ISA Design"],
-}
-
-
-def build_main(c):
-    flow = [Paragraph(c["sec_profile"], styles["sec_title"]), Paragraph(c["summary"], styles["summary"])]
-
-    flow.append(Paragraph(c["sec_projects"], styles["sec_title"]))
-    for key, proj in zip(PROJECT_KEYS, c["projects"]):
-        flow.extend(entry(proj["title"], c["tag_academic"], proj["sub"], proj["desc"], PROJECT_STACKS[key]))
-
-    flow.append(Paragraph(c["sec_education"], styles["sec_title"]))
-    flow.extend(entry(c["edu_title"], c["edu_date"], c["edu_sub"], c["edu_desc"], []))
-
-    flow.append(Paragraph(c["sec_experience"], styles["sec_title"]))
-    flow.append(Paragraph(c["experience_placeholder"], styles["placeholder"]))
-
-    return flow
-
-
-def build_pdf(path, lang="en"):
-    c = load_content(lang)
-    doc = SimpleDocTemplate(str(path), pagesize=A4, leftMargin=0, rightMargin=0, topMargin=0, bottomMargin=0)
-
-    sidebar_flow = build_sidebar(c)
-    main_flow = build_main(c)
-
-    row_h = PAGE_H - 14
-    sidebar_table = Table([[sidebar_flow]], colWidths=[SIDEBAR_W], rowHeights=[row_h])
-    sidebar_table.setStyle(TableStyle([
-        ("BACKGROUND", (0, 0), (-1, -1), SIDEBAR_BG),
-        ("LEFTPADDING", (0, 0), (-1, -1), 10 * mm),
-        ("RIGHTPADDING", (0, 0), (-1, -1), 8 * mm),
-        ("TOPPADDING", (0, 0), (-1, -1), 16 * mm),
-        ("VALIGN", (0, 0), (-1, -1), "TOP"),
-    ]))
-
-    main_table = Table([[main_flow]], colWidths=[PAGE_W - SIDEBAR_W], rowHeights=[row_h])
-    main_table.setStyle(TableStyle([
-        ("LEFTPADDING", (0, 0), (-1, -1), 12 * mm),
-        ("RIGHTPADDING", (0, 0), (-1, -1), 12 * mm),
-        ("TOPPADDING", (0, 0), (-1, -1), 16 * mm),
-        ("VALIGN", (0, 0), (-1, -1), "TOP"),
-    ]))
-
-    outer = Table([[sidebar_table, main_table]], colWidths=[SIDEBAR_W, PAGE_W - SIDEBAR_W])
-    outer.setStyle(TableStyle([
-        ("LEFTPADDING", (0, 0), (-1, -1), 0),
-        ("RIGHTPADDING", (0, 0), (-1, -1), 0),
-        ("TOPPADDING", (0, 0), (-1, -1), 0),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 0),
-    ]))
-
-    doc.build([outer])
+    style_tmp.write_text(style_css, encoding="utf-8")
+    tmp_path.write_text(html, encoding="utf-8")
+    try:
+        subprocess.run(
+            [
+                "wkhtmltopdf",
+                "--disable-javascript",
+                "--enable-local-file-access",
+                "--load-error-handling", "ignore",
+                "--page-size", "A4",
+                "--margin-top", "13mm", "--margin-bottom", "13mm",
+                "--margin-left", "16mm", "--margin-right", "16mm",
+                str(tmp_path), str(path),
+            ],
+            check=True, capture_output=True, cwd=BASE_DIR,
+        )
+    finally:
+        tmp_path.unlink(missing_ok=True)
+        style_tmp.unlink(missing_ok=True)
 
 
 if __name__ == "__main__":
-    out_dir = BASE_DIR / "assets" / "cv"
-    out_dir.mkdir(parents=True, exist_ok=True)
-    build_pdf(out_dir / "joao-coelho-cv-en.pdf", lang="en")
-    build_pdf(out_dir / "joao-coelho-cv-pt.pdf", lang="pt")
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    build_pdf(OUT_DIR / "joao-coelho-cv-en.pdf", "en")
+    build_pdf(OUT_DIR / "joao-coelho-cv-pt.pdf", "pt")
     print("done")

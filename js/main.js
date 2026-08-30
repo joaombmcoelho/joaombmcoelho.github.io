@@ -46,7 +46,10 @@
       el.setAttribute("aria-pressed", el.getAttribute("data-lang-option") === lang ? "true" : "false");
     });
     var dl = document.querySelector("[data-cv-download]");
-    if (dl) dl.setAttribute("href", "assets/cv/joao-coelho-cv-" + lang + ".pdf");
+    if (dl) {
+      var prefix = dl.getAttribute("data-cv-pdf-prefix") || "joao-coelho-cv-";
+      dl.setAttribute("href", "assets/cv/" + prefix + lang + ".pdf");
+    }
     root.classList.add("i18n-ready");
   }
 
