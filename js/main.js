@@ -1,131 +1,86 @@
 (function () {
   "use strict";
-
   var root = document.documentElement;
+  var $ = function (s) { return document.querySelector(s); };
+  var store = {
+    get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  };
 
-  /* ---------- dark mode: stored preference > OS preference > light ---------- */
-  var THEME_KEY = "theme";
-  function applyTheme(theme) { root.classList.toggle("dark", theme === "dark"); }
+  // Theme: dark by default, remembered after the first toggle
+  root.classList.toggle("dark", (store.get("theme") || "dark") === "dark");
 
-  var storedTheme = null;
-  try { storedTheme = localStorage.getItem(THEME_KEY); } catch (e) {}
-  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-  applyTheme(storedTheme || (prefersDark ? "dark" : "light"));
-
-  /* ---------- CV language switch — only runs on cv.html, where the
-     PT/EN buttons exist. The rest of the site is English-only and has
-     no data-i18n attributes, so this fetch never happens elsewhere. ---------- */
-  var DEFAULT_LANG = "en";
+  // CV language (PT/EN): only runs where the language buttons exist (cv.html)
   var langButtons = document.querySelectorAll("[data-lang-option]");
-
-  function detectLang() {
-    var langs = navigator.languages || [navigator.language || ""];
-    for (var i = 0; i < langs.length; i++) {
-      if (String(langs[i]).toLowerCase().indexOf("pt") === 0) return "pt";
-    }
-    return DEFAULT_LANG;
-  }
-  function getLang() {
-    var stored = null;
-    try { stored = localStorage.getItem("lang"); } catch (e) {}
-    return stored === "en" || stored === "pt" ? stored : detectLang();
-  }
-  function applyLang(dict, lang) {
-    root.setAttribute("lang", lang);
-    document.querySelectorAll("[data-i18n]").forEach(function (el) {
-      var value = dict[el.getAttribute("data-i18n")];
-      if (value === undefined) return;
-      if (el.hasAttribute("data-i18n-attr")) el.setAttribute(el.getAttribute("data-i18n-attr"), value);
-      else el.textContent = value;
-    });
-    document.querySelectorAll("[data-i18n-aria]").forEach(function (el) {
-      var value = dict[el.getAttribute("data-i18n-aria")];
-      if (value !== undefined) el.setAttribute("aria-label", value);
-    });
-    langButtons.forEach(function (el) {
-      el.setAttribute("aria-pressed", el.getAttribute("data-lang-option") === lang ? "true" : "false");
-    });
-    var dl = document.querySelector("[data-cv-download]");
-    if (dl) {
-      var prefix = dl.getAttribute("data-cv-pdf-prefix") || "joao-coelho-cv-";
-      dl.setAttribute("href", "assets/cv/" + prefix + lang + ".pdf");
-    }
-    root.classList.add("i18n-ready");
-  }
-
   if (langButtons.length) {
-    fetch("data/i18n.json")
-      .then(function (res) { return res.json(); })
-      .then(function (data) {
-        var lang = getLang();
-        applyLang(data[lang] || data[DEFAULT_LANG], lang);
-        langButtons.forEach(function (btn) {
-          btn.addEventListener("click", function () {
-            var next = btn.getAttribute("data-lang-option");
-            if (next === getLang()) return;
-            try { localStorage.setItem("lang", next); } catch (e) {}
-            applyLang(data[next], next);
-          });
+    var pt = (navigator.languages || [navigator.language || ""]).some(function (l) { return /^pt/i.test(l); });
+    var current = store.get("lang") || (pt ? "pt" : "en");
+    var applyLang = function (dict, lang) {
+      root.lang = lang;
+      document.querySelectorAll("[data-i18n]").forEach(function (el) {
+        var v = dict[el.dataset.i18n];
+        if (v === undefined) return;
+        if (el.dataset.i18nAttr) el.setAttribute(el.dataset.i18nAttr, v); else el.textContent = v;
+      });
+      document.querySelectorAll("[data-i18n-aria]").forEach(function (el) {
+        el.setAttribute("aria-label", dict[el.dataset.i18nAria]);
+      });
+      langButtons.forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.langOption === lang); });
+      $("[data-cv-download]").href = "assets/cv/joao-coelho-cv-" + lang + ".pdf";
+    };
+    // if the fetch fails (file:// without a server) the English text in the HTML stays
+    fetch("data/i18n.json").then(function (r) { return r.json(); }).then(function (data) {
+      applyLang(data[current], current);
+      langButtons.forEach(function (b) {
+        b.addEventListener("click", function () {
+          current = b.dataset.langOption;
+          store.set("lang", current);
+          applyLang(data[current], current);
         });
-      })
-      // If the fetch fails (e.g. opened via file:// without a local server),
-      // leave the English text already present in the markup as a fallback.
-      .catch(function () { root.classList.add("i18n-ready"); });
+      });
+    }).catch(function () {});
   }
 
-  /* ---------- theme toggle button, mobile nav, CV print ---------- */
   document.addEventListener("DOMContentLoaded", function () {
-    var themeToggle = document.querySelector("[data-theme-toggle]");
-    if (themeToggle) {
-      themeToggle.addEventListener("click", function () {
-        var isDark = root.classList.toggle("dark");
-        try { localStorage.setItem(THEME_KEY, isDark ? "dark" : "light"); } catch (e) {}
-      });
-    }
+    $("[data-theme-toggle]").addEventListener("click", function () {
+      store.set("theme", root.classList.toggle("dark") ? "dark" : "light");
+    });
 
-    var navToggle = document.querySelector("[data-nav-toggle]");
-    var navLinks = document.querySelector("[data-nav-links]");
-    if (navToggle && navLinks) {
-      navToggle.addEventListener("click", function () {
-        var open = navLinks.classList.toggle("open");
-        navToggle.setAttribute("aria-expanded", open ? "true" : "false");
-      });
-      navLinks.querySelectorAll("a").forEach(function (a) {
-        a.addEventListener("click", function () {
-          navLinks.classList.remove("open");
-          navToggle.setAttribute("aria-expanded", "false");
+    // Mobile menu
+    var toggle = $("[data-nav-toggle]"), links = $("[data-nav-links]");
+    if (toggle && links) {
+      var setOpen = function (open) {
+        links.classList.toggle("open", open);
+        toggle.setAttribute("aria-expanded", open);
+      };
+      toggle.addEventListener("click", function () { setOpen(!links.classList.contains("open")); });
+      links.querySelectorAll("a").forEach(function (a) { a.addEventListener("click", function () { setOpen(false); }); });
+
+      // Menu highlight follows the clicked / visible section
+      var anchors = links.querySelectorAll('a[href^="#"]');
+      var mark = function (hash) {
+        anchors.forEach(function (a) {
+          if (a.getAttribute("href") === hash) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
         });
-      });
+      };
+      var spy = function () {
+        var p = $("#projects").getBoundingClientRect().top < innerHeight * 0.4;
+        mark(p || innerHeight + scrollY >= document.body.scrollHeight - 4 ? "#projects" : "#top");
+      };
+      anchors.forEach(function (a) { a.addEventListener("click", function () { mark(a.getAttribute("href")); }); });
+      addEventListener("scroll", spy, { passive: true });
+      spy();
     }
 
-    // Safari/WebKit's embedded PDF viewer doesn't reliably fire `load`, and
-    // calling .print() on it too early renders a blank page until the user
-    // hits cancel — at which point the real PDF finally shows up. Rather than
-    // fight that, WebKit just gets the PDF opened in a new tab and prints
-    // manually (Cmd+P works fine once it's actually on screen); every other
-    // engine keeps the auto-print behaviour.
-    var printBtn = document.querySelector("[data-print]");
-    if (printBtn) {
-      printBtn.addEventListener("click", function () {
-        var downloadLink = document.querySelector("[data-cv-download]");
-        var pdfUrl = downloadLink ? downloadLink.getAttribute("href") : null;
-        if (!pdfUrl) { window.print(); return; }
-
-        var pdfWindow = window.open(pdfUrl, "_blank");
-        if (!pdfWindow) return; // popup blocked — PDF is still open in a new tab for manual printing
-
-        var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-        if (isSafari) return;
-
-        var hasPrinted = false;
-        function triggerPrint() {
-          if (hasPrinted) return;
-          hasPrinted = true;
-          try { pdfWindow.focus(); pdfWindow.print(); } catch (e) {}
-        }
-        pdfWindow.addEventListener("load", triggerPrint);
-        setTimeout(triggerPrint, 1000);
-      });
-    }
+    // CV print button: open the PDF and print it (Safari's PDF viewer can't be
+    // printed programmatically, so there it just opens in a new tab)
+    var printBtn = $("[data-print]");
+    if (printBtn) printBtn.addEventListener("click", function () {
+      var w = window.open($("[data-cv-download]").href, "_blank");
+      if (!w || /^((?!chrome|android).)*safari/i.test(navigator.userAgent)) return;
+      var done = false, go = function () { if (done) return; done = true; try { w.focus(); w.print(); } catch (e) {} };
+      w.addEventListener("load", go);
+      setTimeout(go, 1000);
+    });
   });
 })();

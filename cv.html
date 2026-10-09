@@ -7,11 +7,10 @@
 <meta name="description" data-i18n-attr="content" data-i18n="meta.cv.desc" content="CV of João Coelho, Computer Science and Engineering student at Instituto Superior Técnico.">
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/cv.css">
 </head>
-<body class="cv-body">
+<body>
 
-<!-- TOOLBAR — floats over the CV, screen only (hidden on print/PDF) -->
+<!-- toolbar: screen only -->
 <div class="cv-toolbar no-print" role="group" aria-label="CV actions">
   <div class="lang-switch" role="group" aria-label="Language / Idioma">
     <button type="button" data-lang-option="pt" aria-pressed="false">PT</button>
@@ -31,10 +30,6 @@
 </div>
 
 <div class="cv-page">
-
-  <!-- HEADER — screen shows photo + name; print/PDF drops the photo
-       (see @media print in cv.css) and keeps just the name/role, so
-       both versions carry identical text, just less chrome on paper. -->
   <header class="cv-header">
     <img class="cv-avatar no-print" src="assets/images/pfp.png" alt="Portrait of me">
     <div class="cv-header-text">
@@ -42,9 +37,6 @@
       <p class="cv-role" data-i18n="cv.role">Computer Science and Engineering Student</p>
     </div>
   </header>
-
-  <!-- CONTACT LINE — icon before every value, one single row in both
-       screen and print (see cv.css: nowrap + compact sizing). -->
   <ul class="cv-contact-line">
     <li>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2"/><path d="M3 6.5l9 6.5 9-6.5"/></svg>
@@ -71,11 +63,6 @@
       <span data-i18n="cv.location">Lisbon, Portugal</span>
     </li>
   </ul>
-
-  <!-- MAIN — one linear column: Profile, Education, Experience,
-       Projects, Skills, Languages. Every entry follows the same
-       two-row header (name/date, then sub-detail/extra-detail) plus
-       a short bullet list — no free-floating tag rows. -->
   <main class="cv-main">
 
     <div class="cv-block">
@@ -99,34 +86,6 @@
         </ul>
       </div>
     </div>
-
-    <!-- EXPERIENCE — example entry so the layout is visible; swap the
-         text for your own experience once you have it, and delete
-         the "exampleNote" line above it. -->
-    <div class="cv-block">
-      <h2 class="cv-section-title" data-i18n="cv.section.experience">experience</h2>
-      <p class="cv-example-note no-print" data-i18n="cv.experience.exampleNote">Example entry below — replace with your own experience.</p>
-
-      <div class="cv-entry">
-        <div class="cv-entry-row">
-          <h3 data-i18n="cv.exp1.title">Software Engineering Intern (example)</h3>
-          <span class="cv-entry-meta" data-i18n="cv.exp1.date">Jun 2026 — Aug 2026</span>
-        </div>
-        <div class="cv-entry-row cv-entry-sub">
-          <span data-i18n="cv.exp1.company">Company Name</span>
-          <span data-i18n="cv.exp1.city">Lisbon, Portugal</span>
-        </div>
-        <ul class="cv-bullets">
-          <li data-i18n="cv.exp1.b1">Shipped a feature end-to-end that was adopted by the core product team.</li>
-          <li data-i18n="cv.exp1.b2">Cut a key process's runtime by 40% by profiling and rewriting the hot path.</li>
-          <li data-i18n="cv.exp1.b3">Worked with senior engineers on code review and test coverage.</li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- PROJECTS — right-hand slot holds the course, not a date; the
-         old tech-stack "pill row" is now a plain right-aligned line
-         next to the institution, so it doesn't cost its own row. -->
     <div class="cv-block">
       <h2 class="cv-section-title" data-i18n="cv.section.projects">projects</h2>
 
@@ -175,9 +134,6 @@
         </ul>
       </div>
     </div>
-
-    <!-- SKILLS — plain text, one line per category (no boxes: faster
-         to scan and one less thing that can push the page to two). -->
     <div class="cv-block">
       <h2 class="cv-section-title" data-i18n="cv.section.skills">skills</h2>
       <p class="cv-skill-line"><span class="cv-skill-label" data-i18n="cv.skills.programming">Programming</span><span data-i18n="cv.skills.programmingList">Python, C, Assembly (RISC-V), Prolog</span></p>
@@ -192,9 +148,6 @@
 
   </main>
 
-  <footer class="cv-footer no-print">
-    <a href="cv-legacy.html" data-i18n="cv.legacyLink">legacy version</a>
-  </footer>
 
 </div>
 
