@@ -34,7 +34,7 @@
     <img class="cv-avatar no-print" src="assets/images/pfp.png" alt="Portrait of me">
     <div class="cv-header-text">
       <h1>João Coelho</h1>
-      <p class="cv-role" data-i18n="cv.role">Computer Science and Engineering Student</p>
+      <p class="cv-role" data-i18n="cv.role">Computer Science and Engineering Student  •  Lisbon, Portugal</p>
     </div>
   </header>
   <ul class="cv-contact-line">
@@ -58,15 +58,18 @@
       </svg>
       <a href="https://joaombmcoelho.github.io" target="_blank" rel="noopener">joaombmcoelho.github.io</a>
     </li>
+    <!--- 
     <li>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.33-7-11a7 7 0 0 1 14 0c0 5.67-7 11-7 11z"/><circle cx="12" cy="10" r="2.3"/></svg>
-      <span data-i18n="cv.location">Lisbon, Portugal</span>
+      <span data-i18n="cv.location">Lisbon, PT</span>
     </li>
+    -->
   </ul>
   <main class="cv-main">
 
+    <!-- PROFILE (no heading) -->
     <div class="cv-block">
-      <p class="cv-summary" data-i18n="cv.summary">2nd-year Computer Science student (LEIC-A) at Instituto Superior Técnico, comfortable across C, Python and RISC-V. Looking for an internship where I can contribute from day one.</p>
+      <p class="cv-summary"><span data-i18n="cv.summary">2nd-year Computer Science and Engineering student at Instituto Superior Técnico, driven by solving problems across the entire software stack. Building on a solid foundation in C, Java and Python, with a strong focus on systems programming and software architecture.</span> <span data-i18n="cv.summary2">Looking for a summer internship to build functional and scalable software.</span></p>
     </div>
 
     <!-- EDUCATION -->
@@ -74,76 +77,139 @@
       <h2 class="cv-section-title" data-i18n="cv.section.education">education</h2>
       <div class="cv-entry">
         <div class="cv-entry-row">
-          <h3 data-i18n="cv.edu.name">LEIC-A — Computer Science and Engineering</h3>
-          <span class="cv-entry-meta" data-i18n="cv.edu.date">2024 — 2028 (expected)</span>
+          <h3 data-i18n="cv.edu.name">BSc in Computer Science and Engineering (LEIC-A)</h3>
+          <span class="cv-entry-meta" data-i18n="cv.edu.date">2025 – 2028 (expected)</span>
         </div>
         <div class="cv-entry-row cv-entry-sub">
-          <span data-i18n="cv.edu.institution">Instituto Superior Técnico</span>
+          <span data-i18n="cv.edu.institution">Instituto Superior Técnico - University of Lisbon</span>
           <span data-i18n="cv.edu.city">Lisbon, Portugal</span>
         </div>
         <ul class="cv-bullets">
-          <li data-i18n="cv.edu.b1">Coursework: systems programming, computer architecture, algorithms and mathematics.</li>
+          <li><strong data-i18n="cv.edu.b1l">Coursework:</strong> <span data-i18n="cv.edu.b1">Systems Programming, Object-Oriented Programming, Data Structures &amp; Algorithms, Computer Architecture, Artificial Intelligence &amp; Mathematics.</span></li>
+        </ul>
+      </div>
+      <div class="cv-entry">
+        <div class="cv-entry-row">
+          <h3 data-i18n="cv.edu2.name">High School Diploma in Science and Technology</h3>
+          <span class="cv-entry-meta" data-i18n="cv.edu2.date">2022 – 2025</span>
+        </div>
+        <div class="cv-entry-row cv-entry-sub">
+          <span data-i18n="cv.edu2.institution">Escola Secundária Vergílio Ferreira</span>
+        </div>
+        <ul class="cv-bullets">
+          <li><strong data-i18n="cv.edu2.b1l">Academic Distinction:</strong> <span data-i18n="cv.edu2.b1">Awarded Honor Roll in the final year for academic excellence.</span></li>
         </ul>
       </div>
     </div>
+
+    <!-- PROJECTS -->
     <div class="cv-block">
       <h2 class="cv-section-title" data-i18n="cv.section.projects">projects</h2>
 
       <div class="cv-entry">
         <div class="cv-entry-row">
-          <h3 data-i18n="cv.p1.title">Invoicing &amp; Inventory CLI</h3>
-          <span class="cv-entry-meta" data-i18n="cv.p1.course">Systems Programming</span>
+          <h3><a href="https://github.com/joaombmcoelho/projeto_PO" target="_blank" rel="noopener" data-i18n="cv.p1.title">Express Retail Platform (ERP) (Ongoing)</a></h3>
         </div>
         <div class="cv-entry-row cv-entry-sub">
           <span data-i18n="cv.p1.institution">Instituto Superior Técnico</span>
-          <span class="cv-entry-stack" data-i18n="cv.p1.stack">C · Merge Sort · CLI</span>
+          <span class="cv-entry-stack" data-i18n="cv.p1.stack">Java · OOP · CLI · UML</span>
         </div>
         <ul class="cv-bullets">
-          <li data-i18n="cv.p1.b1">Built an invoicing and stock-management system in C: catalogue, cart and invoice history.</li>
-          <li data-i18n="cv.p1.b2">Implemented a hand-written merge sort, EAN checksum validation and wildcard product search.</li>
+          <li data-i18n="cv.p1.b1">Building an object-oriented command-line retail management system featuring dynamic order splitting, inventory tracking and state serialization.</li>
+          <li data-i18n="cv.p1.b2">Designing a highly extensible architecture following the Open-Closed Principle.</li>
         </ul>
       </div>
 
       <div class="cv-entry">
         <div class="cv-entry-row">
-          <h3 data-i18n="cv.p2.title">Scrabble Game &amp; Agent</h3>
-          <span class="cv-entry-meta" data-i18n="cv.p2.course">Functional Programming</span>
+          <h3><a href="https://github.com/ritarvieira/projeto_SO_jr" target="_blank" rel="noopener" data-i18n="cv.p2.title">CloudIST VM Simulator (Ongoing)</a></h3>
         </div>
         <div class="cv-entry-row cv-entry-sub">
           <span data-i18n="cv.p2.institution">Instituto Superior Técnico</span>
-          <span class="cv-entry-stack" data-i18n="cv.p2.stack">Python · AI Agent</span>
+          <span class="cv-entry-stack" data-i18n="cv.p2.stack">C · Multithreading · Linux · POSIX</span>
         </div>
         <ul class="cv-bullets">
-          <li data-i18n="cv.p2.b1">Built a full Scrabble engine in Python for human and bot players across three difficulty levels.</li>
-          <li data-i18n="cv.p2.b2">Implemented board/move validation, letter-bag shuffling and a move-search agent.</li>
+          <li data-i18n="cv.p2.b1">Developing a data center simulator in C to manage virtual machine allocation and concurrent request processing.</li>
+          <li data-i18n="cv.p2.b2">Implementing multithreading, process isolation (fork, exec), and strict resource limitations (CPU/Memory) via POSIX system calls.</li>
         </ul>
       </div>
 
       <div class="cv-entry">
         <div class="cv-entry-row">
-          <h3 data-i18n="cv.p3.title">16-bit Single-Cycle Processor</h3>
-          <span class="cv-entry-meta" data-i18n="cv.p3.course">Computer Architecture</span>
+          <h3><a href="https://github.com/joaombmcoelho/Invoicing_system-IAED" target="_blank" rel="noopener" data-i18n="cv.p3.title">Invoicing &amp; Inventory CLI</a></h3>
         </div>
         <div class="cv-entry-row cv-entry-sub">
           <span data-i18n="cv.p3.institution">Instituto Superior Técnico</span>
-          <span class="cv-entry-stack" data-i18n="cv.p3.stack">Logisim · ISA Design</span>
+          <span class="cv-entry-stack" data-i18n="cv.p3.stack">C · Data Structures · Algorithms · CLI</span>
         </div>
         <ul class="cv-bullets">
-          <li data-i18n="cv.p3.b1">Designed a 16-bit single-cycle processor in Logisim on a 3-bit opcode scheme.</li>
-          <li data-i18n="cv.p3.b2">Built a small custom instruction set (li, add, dot, dota).</li>
+          <li data-i18n="cv.p3.b1">Built a stock-management system in C featuring a product catalogue, shopping cart, and invoice history.</li>
+          <li data-i18n="cv.p3.b2">Implemented a custom merge sort, EAN checksum validation, and a wildcard search engine.</li>
+        </ul>
+      </div>
+
+      <div class="cv-entry">
+        <div class="cv-entry-row">
+          <h3><a href="https://github.com/joaombmcoelho/Scrabble2-FP" target="_blank" rel="noopener" data-i18n="cv.p4.title">Scrabble Game &amp; Agent</a></h3>
+        </div>
+        <div class="cv-entry-row cv-entry-sub">
+          <span data-i18n="cv.p4.institution">Instituto Superior Técnico</span>
+          <span class="cv-entry-stack" data-i18n="cv.p4.stack">Python · Algorithms · AI</span>
+        </div>
+        <ul class="cv-bullets">
+          <li data-i18n="cv.p4.b1">Built a full Scrabble engine in Python for human and bot players across three difficulty levels.</li>
+          <li data-i18n="cv.p4.b2">Implemented board/move validation, a custom xorshift shuffle algorithm, and a move-search AI agent.</li>
+        </ul>
+      </div>
+
+      <div class="cv-entry">
+        <div class="cv-entry-row">
+          <h3><a href="https://github.com/joaombmcoelho/joaombmcoelho.github.io" target="_blank" rel="noopener" data-i18n="cv.p5.title">My portfolio &amp; CV</a></h3>
+        </div>
+        <div class="cv-entry-row cv-entry-sub">
+          <span data-i18n="cv.p5.institution">Personal Project</span>
+          <span class="cv-entry-stack" data-i18n="cv.p5.stack">HTML · CSS · Web · GitHub Pages</span>
+        </div>
+        <ul class="cv-bullets">
+          <li data-i18n="cv.p5.b1">Developed a custom, responsive single-page portfolio and interactive CV.</li>
+          <li data-i18n="cv.p5.b2">Designed a clean UI featuring seamless dark mode integration and a print-optimized layout.</li>
         </ul>
       </div>
     </div>
+
+    <!-- SKILLS -->
     <div class="cv-block">
       <h2 class="cv-section-title" data-i18n="cv.section.skills">skills</h2>
-      <p class="cv-skill-line"><span class="cv-skill-label" data-i18n="cv.skills.programming">Programming</span><span data-i18n="cv.skills.programmingList">Python, C, Assembly (RISC-V), Prolog</span></p>
-      <p class="cv-skill-line"><span class="cv-skill-label" data-i18n="cv.skills.tools">Tools</span><span data-i18n="cv.skills.toolsList">Git, Linux, Docker</span></p>
+      <p class="cv-skill-line"><span class="cv-skill-label" data-i18n="cv.skills.programming">Programming</span><span data-i18n="cv.skills.programmingList">C, Java, Python, Assembly (RISC-V), HTML/CSS, Prolog</span></p>
+      <p class="cv-skill-line"><span class="cv-skill-label" data-i18n="cv.skills.tools">Tools &amp; Environments</span><span data-i18n="cv.skills.toolsList">Linux, Docker, Git, macOS / WSL</span></p>
+      <p class="cv-skill-line"><span class="cv-skill-label" data-i18n="cv.skills.languages">Languages</span><span data-i18n="cv.skills.languagesList">Portuguese (Native), English (Fluent – EFSET C1), French (Elementary – DELF A2)</span></p>
     </div>
 
-    <!-- LANGUAGES -->
+    <!-- EXTRACURRICULARS -->
     <div class="cv-block">
-      <h2 class="cv-section-title" data-i18n="cv.section.languages">languages</h2>
-      <p class="cv-lang-line" data-i18n="cv.languages.line">Portuguese — Native  ·  English — Fluent (C1)  ·  French — Elementary (A2)</p>
+      <h2 class="cv-section-title" data-i18n="cv.section.extra">extracurriculars &amp; initiatives</h2>
+
+      <!-- (commented out for now: remove this line and the closing marker below to show it again)
+      <div class="cv-entry">
+        <div class="cv-entry-row">
+          <h3 data-i18n="cv.x1.title">Cybersecurity Seminars &amp; Meetings</h3>
+          <span class="cv-entry-meta" data-i18n="cv.x1.org">Instituto Superior Técnico</span>
+        </div>
+        <ul class="cv-bullets">
+          <li data-i18n="cv.x1.b1">Actively participating in internal cybersecurity group meetings to broaden knowledge on system vulnerabilities, network security, and ethical hacking.</li>
+        </ul>
+      </div>
+      end of commented-out entry -->
+
+      <div class="cv-entry">
+        <div class="cv-entry-row">
+          <h3 data-i18n="cv.x2.title">Early Coding Competitions &amp; Hackathons</h3>
+        </div>
+        <ul class="cv-bullets">
+          <li><strong data-i18n="cv.x2.b1l">1st Place – Nova FCT Coding Fest (2016):</strong> <span data-i18n="cv.x2.b1">Won a collaborative hackathon at NOVA FCT, showing early problem-solving and teamwork.</span></li>
+          <li><strong data-i18n="cv.x2.b2l">Mobile Translation App – Happy Code Academy (2018):</strong> <span data-i18n="cv.x2.b2">Built a Portuguese-to-English Android translator with MIT App Inventor.</span></li>
+        </ul>
+      </div>
     </div>
 
   </main>

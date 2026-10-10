@@ -53,13 +53,13 @@
       <div>
         <h1>João Coelho</h1>
         <p class="role">Computer Science and Engineering student
-LEIC-A at Instituto Superior Técnico</p>
+Instituto Superior Técnico - University of Lisbon</p>
         <div class="social-row">
           <a class="social-link" href="cv.html" target="_blank" rel="noopener"><svg><use href="#doc"/></svg>CV</a>
           <a class="social-link" href="https://github.com/joaombmcoelho" target="_blank" rel="noopener"><svg><use href="#github"/></svg>GitHub</a>
           <a class="social-link" href="https://www.linkedin.com/in/joaombmcoelho" target="_blank" rel="noopener"><svg><use href="#linkedin"/></svg>LinkedIn</a>
           <a class="social-link" href="mailto:joao.mbmc@gmail.com"><svg><use href="#mail"/></svg>Email</a>
-          <a class="social-link" href="https://fenix.tecnico.ulisboa.pt/homepage/ist1117964" target="_blank" rel="noopener"><svg><use href="#cap"/></svg>IST</a>
+          <!-- <a class="social-link" href="https://fenix.tecnico.ulisboa.pt/homepage/ist1117964" target="_blank" rel="noopener"><svg><use href="#cap"/></svg>IST</a> -->
         </div>
       </div>
     </div>
@@ -69,7 +69,7 @@ LEIC-A at Instituto Superior Técnico</p>
     <div class="wrap">
       <h2>about</h2>
       <div class="about-text">
-        <p>I'm a 2nd-year Computer Science student at Instituto Superior Técnico (LEIC-A), with a strong focus on software engineering and programming. My interests lie in solving problems through code, designing algorithms, and learning how to build clean, functional software.</p>
+        <p>I am a 2nd-year Computer Science and Engineering student at Técnico Lisboa. My work spans from low-level systems programming in C to building applications in Java and Python, alongside experimenting with frontend interfaces.</p>
         <p>Right now I'm building up a portfolio of projects and getting ready for my first internship.</p>
       </div>
 
@@ -80,7 +80,7 @@ LEIC-A at Instituto Superior Técnico</p>
         </div>
         <div class="fact">
           <dt><svg><use href="#cap"/></svg>Studying</dt>
-          <dd><p>LEIC-A, Instituto Superior Técnico</p> <span>(Expected Graduation: 2028)</span></dd>
+          <dd><p>CS and Engineering, Técnico Lisboa</p> <span>(Expected Graduation: 2028)</span></dd>
         </div>
         <div class="fact">
           <dt><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="0.8" fill="currentColor"/></svg>Focus areas</dt>
@@ -93,11 +93,13 @@ LEIC-A at Instituto Superior Técnico</p>
       </dl>
 
       <div class="skills-compact">
-        <p class="skills-label">skills</p>
+        <p class="skills-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>Skills</p>
         <ul class="skill-list">
-          <li>Python</li>
           <li>C</li>
+          <li>Java</li>
+          <li>Python</li>
           <li>Git</li>
+          <li>Docker</li>
           <li>Linux</li>
         </ul>
       </div>
@@ -107,29 +109,53 @@ LEIC-A at Instituto Superior Técnico</p>
   <section class="block" id="projects">
     <div class="wrap">
       <h2>projects</h2>
-      <p class="section-lede">A collection of my top academic coursework and personal projects.</p>
+      <p class="section-lede">My top academic coursework and personal projects.</p>
 
       <!-- To add a project, copy one <article> below. -->
       <div class="project-grid">
 
         <article class="project-card">
-          <div class="card-top"><span class="origin">Course</span></div>
+          <div class="card-top"><span class="origin">Personal Project</span></div>
+          <h3><a href="https://github.com/joaombmcoelho/joaombmcoelho.github.io" target="_blank" rel="noopener">My portflolio &amp CV </a></h3>
+          <p>A custom single-page portfolio and interactive CV website built using HTML and CSS. It features a minimalist design, dark mode integration and a print-optimized layout, hosted on GitHub Pages.</p>
+          <div class="stack"><span>HTML</span><span>CSS</span><span>Web</span><span>GitHub Pages</span></div>
+          <div class="links"><a href="https://github.com/joaombmcoelho/joaombmcoelho.github.io" target="_blank" rel="noopener"><svg><use href="#github"/></svg><span>Code</span></a></div>
+        </article>
+
+        <article class="project-card">
+          <div class="card-top"><span class="origin">Coursework [Currently Developing]</span></div>
+          <h3><a href="https://github.com/joaombmcoelho/projeto_PO" target="_blank" rel="noopener">Express Retail Platform (ERP) </a></h3>
+          <p>An object-oriented retail management CLI built in Java. Features state serialization, dynamic order splitting, inventory tracking and a highly extensible architecture strictly following the Open-Closed Principle.</p>
+          <div class="stack"><span>Java</span><span>OOP</span><span>CLI</span><span>UML</span></div>
+          <div class="links"><a href="https://github.com/joaombmcoelho/projeto_PO" target="_blank" rel="noopener"><svg><use href="#github"/></svg><span>Code</span></a></div>
+        </article>
+
+        <article class="project-card">
+          <div class="card-top"><span class="origin">Coursework [Currently Developing]</span></div>
+          <h3><a href="https://github.com/ritarvieira/projeto_SO_jr" target="_blank" rel="noopener">CloudIST VM Simulator</a></h3>
+          <p>A data center simulator built in C to manage virtual machine allocation and execution. It uses multithreading and synchronization to process concurrent requests, alongside POSIX file system APIs and process isolation tools to execute applications under strict CPU and memory limits.</p>
+          <div class="stack"><span>C</span><span>Multithreading</span><span>Linux</span><span>POSIX</span></div>
+          <div class="links"><a href="https://github.com/ritarvieira/projeto_SO_jr" target="_blank" rel="noopener"><svg><use href="#github"/></svg><span>Code</span></a></div>
+        </article>
+
+        <article class="project-card">
+          <div class="card-top"><span class="origin">Coursework</span></div>
           <h3><a href="https://github.com/joaombmcoelho/Invoicing_system-IAED" target="_blank" rel="noopener">Invoicing &amp; Inventory CLI</a></h3>
-          <p>A command-line invoicing and stock-management system in C: product catalogue, shopping cart, invoice history sorted with a hand-written merge sort, EAN-8/13 checksum validation, and a wildcard search engine for product lookups.</p>
-          <div class="stack"><span>C</span><span>Merge Sort</span><span>CLI</span></div>
+          <p>A command-line invoicing and stock-management system in C: product catalogue, shopping cart, invoice history sorted with a custom merge sort, EAN-8/13 checksum validation and a wildcard search engine for product lookups.</p>
+          <div class="stack"><span>C</span><span>Data Structures</span><span>Algorithms</span><span>CLI</span></div>
           <div class="links"><a href="https://github.com/joaombmcoelho/Invoicing_system-IAED" target="_blank" rel="noopener"><svg><use href="#github"/></svg><span>Code</span></a></div>
         </article>
 
         <article class="project-card">
-          <div class="card-top"><span class="origin">Course</span></div>
+          <div class="card-top"><span class="origin">Coursework</span></div>
           <h3><a href="https://github.com/joaombmcoelho/Scrabble2-FP" target="_blank" rel="noopener">Scrabble Game &amp; Agent</a></h3>
-          <p>A full Scrabble engine in Python for 2–4 players, human or bots, with three difficulty levels. Handles board and move validation, a Fisher–Yates shuffle driven by a custom xorshift PRNG, and a move-search agent that scores candidate plays across the board.</p>
-          <div class="stack"><span>Python</span><span>Agents</span></div>
+          <p>A full Scrabble CLI game in Python for 2 to 4 players (human or bots) with three difficulty levels. Features board and move validation, a Fisher-Yates shuffle driven by a custom xorshift algorithm, and a move-search agent that evaluates and scores candidate plays across the board.</p>
+          <div class="stack"><span>Python</span><span>Algorithms</span><span>AI</span></div>
           <div class="links"><a href="https://github.com/joaombmcoelho/Scrabble2-FP" target="_blank" rel="noopener"><svg><use href="#github"/></svg><span>Code</span></a></div>
         </article>
 
         <article class="project-card">
-          <div class="card-top"><span class="origin">Course</span></div>
+          <div class="card-top"><span class="origin">Coursework</span></div>
           <h3><a href="https://github.com/joaombmcoelho/Mini-Transformer_P3-IAC" target="_blank" rel="noopener">16-bit Single-Cycle Processor</a></h3>
           <p>A 16-bit single-cycle processor designed in Logisim, supporting a small custom instruction set (li, add, dot, dota) with a 3-bit opcode scheme.</p>
           <div class="stack"><span>Logisim</span><span>ISA Design</span></div>

@@ -6,11 +6,12 @@ e imprime com wkhtmltopdf. Usa as fontes como fontes de sistema (copia os .ttf
 de assets/fonts/ttf), para o texto do PDF ficar selecionável.
 
     pip install beautifulsoup4 --break-system-packages
-    sudo apt install wkhtmltopdf      # macOS: brew install --cask wkhtmltopdf
+    sudo apt install wkhtmltopdf      # macOS: .pkg de wkhtmltopdf.org/downloads.html (o cask do brew foi desativado)
     python3 gen_cv_pdf.py
 """
 
 import json
+import re
 import platform
 import shutil
 import subprocess
@@ -111,8 +112,8 @@ def build_pdf(path: Path, lang: str) -> None:
                 "--enable-local-file-access",
                 "--load-error-handling", "ignore",
                 "--page-size", "A4",
-                "--margin-top", "13mm", "--margin-bottom", "13mm",
-                "--margin-left", "16mm", "--margin-right", "16mm",
+                "--margin-top", "9mm", "--margin-bottom", "9mm",
+                "--margin-left", "15mm", "--margin-right", "15mm",
                 str(tmp_path), str(path),
             ],
             check=True, capture_output=True, cwd=BASE_DIR,
@@ -120,6 +121,8 @@ def build_pdf(path: Path, lang: str) -> None:
     finally:
         tmp_path.unlink(missing_ok=True)
         style_tmp.unlink(missing_ok=True)
+    pages = len(re.findall(rb"/Type\s*/Page[^s]", path.read_bytes()))
+    print(f"{path.name}: {pages} page(s)" + ("" if pages == 1 else "  <-- DEVE TER 1 PÁGINA"))
 
 
 if __name__ == "__main__":

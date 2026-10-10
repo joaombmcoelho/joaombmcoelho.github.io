@@ -13,5 +13,6 @@ gen_cv_pdf.py     gera assets/cv/*.pdf a partir do cv.html
 
 **Editar o CV:** muda o texto em `cv.html` (EN) e a mesma chave em `data/i18n.json` (EN e PT).
 Depois regenera os PDFs: `python3 gen_cv_pdf.py` (precisa de `wkhtmltopdf` e `beautifulsoup4`).
+No Mac o cask do Homebrew do wkhtmltopdf foi desativado (descontinuado): instala o `.pkg` de https://wkhtmltopdf.org/downloads.html e `pip3 install beautifulsoup4`.
 
 **Cores:** variáveis no topo de `css/style.css` — `:root` é o modo escuro, `html:not(.dark)` o claro.
