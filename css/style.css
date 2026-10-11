@@ -39,13 +39,13 @@
   --gutter: clamp(1.25rem, 5vw, 3.5rem);
   --transition: 160ms ease;
 }
-/* Light mode = the dark theme inverted: one light-blue canvas, navy lines/text/hover. */
+/* Light mode = dark theme inverted: fundo ciano quase branco, linhas/texto/hover navy. */
 html:not(.dark) {
-  --bg: #e8f2fc; --chrome: #dfedfa;
-  --text: #0b2b4a; --text-soft: #4d6580;
-  --border: #0b2b4a; --border-soft: rgba(11,43,74,.22); --border-strong: #0b2b4a;
-  --accent: #17698c;
-  --hover-bg: #0b2b4a; --hover-fg: #e8f2fc;
+  --bg: #f0fafd; --chrome: #e5f6fb;
+  --text: #0b2d4d; --text-soft: #4a6076;
+  --border: #0b2d4d; --border-soft: rgba(11,45,77,.22); --border-strong: #0b2d4d;
+  --accent: #0b2d4d;
+  --hover-bg: #0b2d4d; --hover-fg: #f0fafd;
   --focus: #b38600;
   --syn-1: #8a3fb8; --syn-2: #c43d54; --syn-3: #1f6fb0; --syn-4: #9a7300; --syn-5: #3f7d20;
 }
